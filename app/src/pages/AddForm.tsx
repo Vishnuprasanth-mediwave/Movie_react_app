@@ -5,13 +5,17 @@ import { useState } from "react";
 
 function AddForm() {
   const navigate = useNavigate();
-  const [movie, setMovie] = useState({});
+  const [movie, setMovie] = useState({
+    title: "",
+    year: 0,
+  });
 
-  async function addThisDummyMovie() {
+  async function handleAddMovie(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     try {
       const moviePayload = {
-        title: "My dummy movie",
-        year: 1998,
+        title: movie.title,
+        year: movie.year,
       };
       const response = await addMovie(moviePayload);
       console.log(response);
@@ -21,15 +25,17 @@ function AddForm() {
       console.log(error);
     }
   }
-  //   function handleChange(e:React.ChangeEvent<HTMLInputElement>){
-  //     const updatedMovie=
-  //   }
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setMovie({ ...movie, [name]: value });
+    console.log(movie);
+  }
 
   return (
     <>
       <Layout title="addForm">
         <h1>AddForm</h1>
-        <form>
+        <form onSubmit={(e) => handleAddMovie(e)}>
           <label htmlFor="title">
             Title
             <input
@@ -37,7 +43,7 @@ function AddForm() {
               id="title"
               name="title"
               placeholder="Title"
-              //   onChange={e=>handleChange(e)}
+              onChange={(e) => handleChange(e)}
               required
             />
           </label>
@@ -45,20 +51,16 @@ function AddForm() {
           <label htmlFor="year">
             Year
             <input
-              type="text"
+              type="number"
               id="year"
               name="year"
               placeholder="Year"
+              onChange={(e) => handleChange(e)}
               required
             />
           </label>
+          <button type="submit">add movie</button>
         </form>
-
-        <button onClick={() => addThisDummyMovie()}>add dummy movie</button>
-
-        <Link to="/">
-          <button>Submit</button>
-        </Link>
       </Layout>
     </>
   );

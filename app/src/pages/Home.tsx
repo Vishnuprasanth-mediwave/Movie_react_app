@@ -57,9 +57,12 @@ function Home() {
                   <h1>{m.title}</h1>
                   <h3>{m.year}</h3>
 
-                  <Link to={`/edit/${m.id}`} className="pico-link">
-                    <button>Edit</button>
-                  </Link>
+                  <div className="grid">
+                    <Link to={`/edit/${m.id}`} className="pico-link">
+                      <button>Edit</button>
+                    </Link>
+                    <button>delete</button>
+                  </div>
                 </article>
               ))}
             </div>
