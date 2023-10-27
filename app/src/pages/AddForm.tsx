@@ -3,15 +3,14 @@ import Layout from "../components/layout";
 import { addMovie } from "../services/api";
 import { useState } from "react";
 
-function AddForm() {
+function AddForm({ handleAddMovie }) {
   const navigate = useNavigate();
   const [movie, setMovie] = useState({
     title: "",
     year: 0,
   });
 
-  async function handleAddMovie(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleAddMovie() {
     try {
       const moviePayload = {
         title: movie.title,
@@ -35,7 +34,7 @@ function AddForm() {
     <>
       <Layout title="addForm">
         <h1>AddForm</h1>
-        <form onSubmit={(e) => handleAddMovie(e)}>
+        {/* <form onSubmit={(e) => handleAddMovie(e)}>
           <label htmlFor="title">
             Title
             <input
@@ -60,7 +59,7 @@ function AddForm() {
             />
           </label>
           <button type="submit">add movie</button>
-        </form>
+        </form> */}
       </Layout>
     </>
   );
