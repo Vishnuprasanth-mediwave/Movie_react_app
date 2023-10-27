@@ -1,40 +1,80 @@
-import { Link } from "react-router-dom";
-const EditForm = () => {
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { IMovie } from "../components/types";
+import Layout from "../components/layout";
+import { updateMovie } from "../services/api";
+
+interface IEditForm {
+  movie: IMovie;
+}
+const EditForm: React.FC<IEditForm> = ({ movie }) => {
+  const { id } = useParams();
+  const [editValue, setEditValue] = useState({
+    title: movie.title,
+    year: movie.year,
+  });
+
+  useEffect(() => {
+    console.log("Getting info of ", id);
+  }, [id]);
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setEditValue({ ...movie, [name]: value });
+    console.log(movie);
+  }
+  async function handleEditMovie() {
+    try {
+      const moviePayload = {
+        title: editValue.title,
+        year: editValue.year,
+      };
+      const response = await updateMovie(moviePayload, movie.id);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
-      <main className="container">
-        <form>
-          <label htmlFor="title">
-            Title
-            <input
-              type="text"
-              id="title"
-              name="title"
-              placeholder="Title"
-              required
-            />
-          </label>
+      <Layout title={`EditMovie${movie.title}`}>
+        <main className="container">
+          <form>
+            <label htmlFor="title">
+              Title
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={editValue.title}
+                placeholder="Title"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
 
-          <label htmlFor="year">
-            Year
-            <input
-              type="text"
-              id="year"
-              name="year"
-              placeholder="Year"
-              required
-            />
-          </label>
-          <div className="grid">
-            <Link to="/">
-              <button>add</button>
-            </Link>
-            <Link to="/">
-              <button>Cancel</button>
-            </Link>
-          </div>
-        </form>
-      </main>
+            <label htmlFor="year">
+              Year
+              <input
+                type="number"
+                id="year"
+                name="year"
+                value={editValue.year}
+                placeholder="Year"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
+            <div className="grid">
+              <Link to="/">
+                <button onClick={() => handleEditMovie()}>add</button>
+              </Link>
+              <Link to="/">
+                <button>Cancel</button>
+              </Link>
+            </div>
+          </form>
+        </main>
+      </Layout>
     </>
   );
 };
