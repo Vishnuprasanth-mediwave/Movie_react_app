@@ -19,16 +19,11 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
   }, [id]);
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setEditValue({ ...movie, [name]: value });
-    console.log(movie);
+    setEditValue({ ...editValue, [name]: value });
   }
   async function handleEditMovie() {
     try {
-      const moviePayload = {
-        title: editValue.title,
-        year: editValue.year,
-      };
-      const response = await updateMovie(moviePayload, movie.id);
+      const response = await updateMovie(editValue, movie.id);
       console.log(response);
     } catch (error) {
       console.log(error);
