@@ -1,74 +1,82 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { IMovie } from "../components/types";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { IMovie, IMovieAdd, IShowError } from "../components/types";
 import Layout from "../components/layout";
 import { updateMovie } from "../services/api";
+import Form from "../components/form";
+import Modal from "../components/modal";
 
 interface IEditForm {
   movie: IMovie;
 }
 const EditForm: React.FC<IEditForm> = ({ movie }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [showModalMsg, setShowModalMsg] = useState<IShowError>({
+    action: "",
+    msg: "",
+  });
+  const navigate = useNavigate();
   const { id } = useParams();
-  const [editValue, setEditValue] = useState({
+  const editValue = {
     title: movie.title,
     year: movie.year,
-  });
+  };
+  const toggleModal = () => {
+    setShowModal((prevShowModal) => !prevShowModal);
+  };
 
   useEffect(() => {
     console.log("Getting info of ", id);
   }, [id]);
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    setEditValue({ ...editValue, [name]: value });
-  }
-  async function handleEditMovie() {
+
+  async function handleEditMovie(editedmovie: IMovieAdd) {
+    toggleModal();
     try {
-      const response = await updateMovie(editValue, movie.id);
+      const response = await updateMovie(editedmovie, movie.id);
       console.log(response);
+      setShowModalMsg({
+        action: "Success",
+        msg: "Movie Edited",
+      });
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        console.error("Error editing movie:", error);
+        setShowModalMsg({
+          action: "Failed",
+          msg: error.message,
+        });
+      }
     }
   }
+
+  function navigateToHome() {
+    navigate("/");
+  }
+
+  function cancelModal() {
+    setShowModalMsg({
+      action: "Cancelled",
+      msg: "If you want to go to the home, click the confirm button",
+    });
+    toggleModal();
+  }
+
   return (
     <>
-      <Layout title={`EditMovie${movie.title}`}>
-        <main className="container">
-          <form>
-            <label htmlFor="title">
-              Title
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={editValue.title}
-                placeholder="Title"
-                onChange={(e) => handleChange(e)}
-                required
-              />
-            </label>
-
-            <label htmlFor="year">
-              Year
-              <input
-                type="number"
-                id="year"
-                name="year"
-                value={editValue.year}
-                placeholder="Year"
-                onChange={(e) => handleChange(e)}
-                required
-              />
-            </label>
-            <div className="grid">
-              <Link to="/">
-                <button onClick={() => handleEditMovie()}>add</button>
-              </Link>
-              <Link to="/">
-                <button>Cancel</button>
-              </Link>
-            </div>
-          </form>
-        </main>
+      <Layout title={`Edit Movie ${movie.title}`}>
+        <Form
+          handleAddMovie={handleEditMovie}
+          cancelModal={cancelModal}
+          emptyMovie={editValue}
+          type="edit"
+        />
+        {showModal && (
+          <Modal
+            errorMsg={showModalMsg}
+            closeModal={toggleModal}
+            navigateToHome={navigateToHome}
+          />
+        )}
       </Layout>
     </>
   );

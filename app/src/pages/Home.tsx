@@ -5,10 +5,12 @@ import Layout from "../components/layout";
 import { IMovie, IShowError } from "../components/types";
 
 import "@picocss/pico";
+import Modal from "../components/modal";
 
 interface IHome {
   handleEdit: (movie: IMovie) => void;
 }
+
 const Home: React.FC<IHome> = ({ handleEdit }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -64,6 +66,7 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
       }
     }
   }
+
   return (
     <>
       <Layout title="Home">
@@ -93,19 +96,11 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
                     </Link>
                     <button onClick={() => handleDelete(m.id)}>delete</button>
                     {showModal && (
-                      <dialog open>
-                        <article>
-                          <a
-                            href="#close"
-                            aria-label="Close"
-                            className="close"
-                            data-target="modal-example"
-                            onClick={toggleModal}
-                          ></a>
-                          <h3>{showModalMsg.action}</h3>
-                          <p>{showModalMsg.msg}</p>
-                        </article>
-                      </dialog>
+                      <Modal
+                        errorMsg={showModalMsg}
+                        closeModal={toggleModal}
+                        navigateToHome={toggleModal}
+                      />
                     )}
                   </div>
                 </article>

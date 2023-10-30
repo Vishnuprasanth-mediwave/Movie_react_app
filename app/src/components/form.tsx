@@ -1,28 +1,52 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { IMovieAdd } from "./types";
+
 interface IForm {
-  handleAddMovie: () => void;
+  handleAddMovie: (movie: IMovieAdd) => void;
+  cancelModal?: () => void;
+  emptyMovie: IMovieAdd;
+  type?: string;
 }
-const Form: React.FC<IForm> = (handleAddMovie) => {
+
+const Form: React.FC<IForm> = ({
+  handleAddMovie,
+  cancelModal,
+  emptyMovie,
+  type,
+}) => {
   const [movie, setMovie] = useState({
-    title: "",
-    year: 0,
+    title: emptyMovie.title,
+    year: emptyMovie.year,
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setMovie({ ...movie, [name]: value });
-    console.log(movie);
   }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    handleAddMovie(movie);
+  }
+
+  function handleCancelClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    if (cancelModal) {
+      cancelModal();
+    }
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <label htmlFor="title">
         Title
         <input
           type="text"
           id="title"
           name="title"
+          value={movie.title}
           placeholder="Title"
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
           required
         />
       </label>
@@ -33,13 +57,25 @@ const Form: React.FC<IForm> = (handleAddMovie) => {
           type="number"
           id="year"
           name="year"
+          value={movie.year}
           placeholder="Year"
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
           required
         />
       </label>
-      <button onSubmit={() => handleAddMovie}>add movie</button>
+
+      {type === "edit" ? (
+        <>
+          <button type="submit">Save</button>
+          <button onClick={handleCancelClick}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <button type="submit">Add Movie</button>
+        </>
+      )}
     </form>
   );
 };
+
 export default Form;
