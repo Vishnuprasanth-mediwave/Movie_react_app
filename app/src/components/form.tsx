@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { IMovieAdd } from "./types";
+import LoadingIcon from "./Loading/LoadingIcon";
 
 interface IForm {
   handleAddMovie: (movie: IMovieAdd) => void;
   cancelModal?: () => void;
   emptyMovie?: IMovieAdd;
   type?: string;
+  loading: boolean;
 }
 
 const Form: React.FC<IForm> = ({
@@ -13,6 +15,7 @@ const Form: React.FC<IForm> = ({
   cancelModal,
   emptyMovie,
   type,
+  loading,
 }) => {
   const [movie, setMovie] = useState(
     emptyMovie || {
@@ -73,7 +76,9 @@ const Form: React.FC<IForm> = ({
         </>
       ) : (
         <>
-          <button type="submit">Add Movie</button>
+          <button type="submit">
+            {loading ? <LoadingIcon /> : <>Add Movie</>}
+          </button>
         </>
       )}
     </form>

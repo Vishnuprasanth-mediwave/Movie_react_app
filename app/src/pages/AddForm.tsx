@@ -12,6 +12,7 @@ function AddForm() {
     action: "",
     msg: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   // const movie = {
   //   title: "",
@@ -21,6 +22,7 @@ function AddForm() {
     setShowModal((prevShowModal) => !prevShowModal);
   };
   async function handleAddMovie(movie: IMovieAdd) {
+    setIsLoading(true);
     toggleModal();
     try {
       const moviePayload = {
@@ -41,6 +43,8 @@ function AddForm() {
           msg: error.message,
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   }
   function navigateToHome() {
@@ -50,7 +54,7 @@ function AddForm() {
     <>
       <Layout title="addForm">
         <h1>AddForm</h1>
-        <Form handleAddMovie={handleAddMovie} />
+        <Form handleAddMovie={handleAddMovie} loading={isLoading} />
         {showModal && (
           <Modal
             errorMsg={showModalMsg}

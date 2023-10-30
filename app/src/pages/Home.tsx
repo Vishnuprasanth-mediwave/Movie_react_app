@@ -36,7 +36,14 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
         const response = await getMovies();
         setMovies(response.data);
       } catch (error) {
-        console.log(error);
+        toggleModal();
+        if (error instanceof Error) {
+          console.error("Error deleting movie:", error);
+          setShowModalMsg({
+            action: "Failed",
+            msg: error.message,
+          });
+        }
       } finally {
         setIsLoading(false);
       }
@@ -45,9 +52,11 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
     getMoviesFromAPI();
   }, [refresh]);
   async function handleDelete(id: number) {
-    toggleModal();
+    setIsLoading(true);
+
     try {
       await deleteMovie(id);
+      toggleModal();
       setShowModalMsg({
         action: "Succes",
         msg: "deleted",
@@ -56,6 +65,7 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error deleting movie:", error);
+        toggleModal();
         setShowModalMsg({
           action: "Failed",
           msg: error.message,
@@ -67,6 +77,8 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
           msg: "An unknown error occurred.",
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -74,7 +86,7 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
     <>
       <Layout title="Home">
         <h1>Home</h1>
-        <LoadingIcon />
+
         <div className="container">
           <Link to="/new" role="button" className="secondary">
             +
@@ -83,34 +95,36 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
             disabled={isLoading}
             onClick={() => setRefresh((prev) => !prev)}
           >
-            refresh list
+            {isLoading ? <LoadingIcon /> : <>refresh</>}
           </button>
-          {isLoading ? (
+          {/* {isLoading ? (
             <p>Loading movies!</p>
-          ) : (
-            <div className="grid">
-              {movies.map((m) => (
-                <article key={m.id}>
-                  <h1>{m.title}</h1>
-                  <h3>{m.year}</h3>
+          ) : ( */}
+          <div className="grid">
+            {movies.map((m) => (
+              <article key={m.id}>
+                <h1>{m.title}</h1>
+                <h3>{m.year}</h3>
 
-                  <div className="grid">
-                    <Link to={`/edit/${m.id}`}>
-                      <button onClick={() => handleEdit(m)}>Edit</button>
-                    </Link>
-                    <button onClick={() => handleDelete(m.id)}>delete</button>
-                    {showModal && (
-                      <Modal
-                        errorMsg={showModalMsg}
-                        closeModal={toggleModal}
-                        navigateToHome={toggleModal}
-                      />
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+                <div className="grid">
+                  <Link to={`/edit/${m.id}`}>
+                    <button onClick={() => handleEdit(m)}>Edit</button>
+                  </Link>
+                  <button onClick={() => handleDelete(m.id)}>
+                    {isLoading ? <LoadingIcon /> : <>delete</>}
+                  </button>
+                </div>
+              </article>
+            ))}
+            {showModal && (
+              <Modal
+                errorMsg={showModalMsg}
+                closeModal={toggleModal}
+                navigateToHome={toggleModal}
+              />
+            )}
+          </div>
+          {/* )} */}
         </div>
       </Layout>
     </>

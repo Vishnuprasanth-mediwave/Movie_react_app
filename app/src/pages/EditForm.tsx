@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { IEditForm,  IMovieAdd, IShowError } from "../components/types";
+import { IEditForm, IMovieAdd, IShowError } from "../components/types";
 import Layout from "../components/layout";
 import { updateMovie } from "../services/api";
 import Form from "../components/form";
 import Modal from "../components/modal";
-
-
 
 const EditForm: React.FC<IEditForm> = ({ movie }) => {
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +18,7 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
     title: movie.title,
     year: movie.year,
   };
+  const [isLoading, setIsLoading] = useState(false);
   const toggleModal = () => {
     setShowModal((prevShowModal) => !prevShowModal);
   };
@@ -29,6 +28,8 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
   }, [id]);
 
   async function handleEditMovie(editedmovie: IMovieAdd) {
+    setIsLoading(true);
+
     toggleModal();
     try {
       const response = await updateMovie(editedmovie, movie.id);
@@ -45,6 +46,8 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
           msg: error.message,
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -68,6 +71,7 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
           cancelModal={cancelModal}
           emptyMovie={editValue}
           type="edit"
+          loading={isLoading}
         />
         {showModal && (
           <Modal

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import "./App.css";
 
 import Home from "./pages/Home";
 const AddForm = lazy(() => import("./pages/AddForm"));
