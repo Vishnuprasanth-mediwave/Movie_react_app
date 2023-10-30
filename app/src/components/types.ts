@@ -11,3 +11,7 @@ export interface IShowError {
   action: string;
   msg: string;
 }
+
+export interface IEditForm {
+  movie: IMovie;
+}

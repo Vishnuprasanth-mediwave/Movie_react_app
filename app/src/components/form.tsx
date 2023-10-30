@@ -4,7 +4,7 @@ import { IMovieAdd } from "./types";
 interface IForm {
   handleAddMovie: (movie: IMovieAdd) => void;
   cancelModal?: () => void;
-  emptyMovie: IMovieAdd;
+  emptyMovie?: IMovieAdd;
   type?: string;
 }
 
@@ -14,10 +14,12 @@ const Form: React.FC<IForm> = ({
   emptyMovie,
   type,
 }) => {
-  const [movie, setMovie] = useState({
-    title: emptyMovie.title,
-    year: emptyMovie.year,
-  });
+  const [movie, setMovie] = useState(
+    emptyMovie || {
+      title: "",
+      year: 0,
+    }
+  );
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -57,7 +59,7 @@ const Form: React.FC<IForm> = ({
           type="number"
           id="year"
           name="year"
-          value={movie.year}
+          value={movie.year?.toString() || ""}
           placeholder="Year"
           onChange={handleChange}
           required

@@ -13,10 +13,10 @@ function AddForm() {
     msg: "",
   });
   const navigate = useNavigate();
-  const movie = {
-    title: "",
-    year: parseInt(""),
-  };
+  // const movie = {
+  //   title: "",
+  //   year: parseInt(""),
+  // };
   const toggleModal = () => {
     setShowModal((prevShowModal) => !prevShowModal);
   };
@@ -50,7 +50,7 @@ function AddForm() {
     <>
       <Layout title="addForm">
         <h1>AddForm</h1>
-        <Form handleAddMovie={handleAddMovie} emptyMovie={movie} />
+        <Form handleAddMovie={handleAddMovie} />
         {showModal && (
           <Modal
             errorMsg={showModalMsg}

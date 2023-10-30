@@ -11,7 +11,7 @@ export const getMovies = () => {
 
 interface IMovieAdd {
   title: string;
-  year: number;
+  year: number | undefined;
 }
 
 export const addMovie = (payload: IMovieAdd) => {

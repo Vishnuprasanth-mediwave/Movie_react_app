@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { IMovie, IMovieAdd, IShowError } from "../components/types";
+import { IEditForm,  IMovieAdd, IShowError } from "../components/types";
 import Layout from "../components/layout";
 import { updateMovie } from "../services/api";
 import Form from "../components/form";
 import Modal from "../components/modal";
 
-interface IEditForm {
-  movie: IMovie;
-}
+
+
 const EditForm: React.FC<IEditForm> = ({ movie }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalMsg, setShowModalMsg] = useState<IShowError>({

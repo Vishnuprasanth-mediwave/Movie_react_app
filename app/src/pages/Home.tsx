@@ -7,6 +7,8 @@ import { IMovie, IShowError } from "../components/types";
 import "@picocss/pico";
 import Modal from "../components/modal";
 
+import LoadingIcon from "../components/Loading/LoadingIcon";
+
 interface IHome {
   handleEdit: (movie: IMovie) => void;
 }
@@ -50,6 +52,7 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
         action: "Succes",
         msg: "deleted",
       });
+      setRefresh((prev) => !prev);
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error deleting movie:", error);
@@ -71,6 +74,7 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
     <>
       <Layout title="Home">
         <h1>Home</h1>
+        <LoadingIcon />
         <div className="container">
           <Link to="/new" role="button" className="secondary">
             +
