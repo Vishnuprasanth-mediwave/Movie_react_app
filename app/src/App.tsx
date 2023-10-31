@@ -7,9 +7,7 @@ const AddForm = lazy(() => import("./pages/AddForm"));
 const EditForm = lazy(() => import("./pages/EditForm"));
 import "@picocss/pico";
 import { IMovie } from "./components/types";
-function Loading() {
-  return <p>Loading ...</p>;
-}
+import Loading from "./components/loding";
 function App() {
   const [movie, setMovie] = useState<IMovie>({
     id: 0,
