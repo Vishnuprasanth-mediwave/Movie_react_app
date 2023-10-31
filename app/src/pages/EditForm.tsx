@@ -30,7 +30,6 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
   async function handleEditMovie(editedmovie: IMovieAdd) {
     setIsLoading(true);
 
-    toggleModal();
     try {
       const response = await updateMovie(editedmovie, movie.id);
       console.log(response);
@@ -48,6 +47,7 @@ const EditForm: React.FC<IEditForm> = ({ movie }) => {
       }
     } finally {
       setIsLoading(false);
+      toggleModal();
     }
   }
 

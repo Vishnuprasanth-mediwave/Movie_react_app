@@ -23,7 +23,6 @@ function AddForm() {
   };
   async function handleAddMovie(movie: IMovieAdd) {
     setIsLoading(true);
-    toggleModal();
     try {
       const moviePayload = {
         title: movie.title,
@@ -45,6 +44,7 @@ function AddForm() {
       }
     } finally {
       setIsLoading(false);
+      toggleModal();
     }
   }
   function navigateToHome() {

@@ -71,12 +71,14 @@ const Form: React.FC<IForm> = ({
 
       {type === "edit" ? (
         <>
-          <button type="submit">Save</button>
+          <button type="submit" disabled={loading}>
+            {loading ? <LoadingIcon /> : <>Save</>}
+          </button>
           <button onClick={handleCancelClick}>Cancel</button>
         </>
       ) : (
         <>
-          <button type="submit">
+          <button type="submit" disabled={loading}>
             {loading ? <LoadingIcon /> : <>Add Movie</>}
           </button>
         </>

@@ -13,3 +13,6 @@
     transform: rotate(360deg);
   }
 }
+.modal {
+  width: 300px;
+}

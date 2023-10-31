@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getMovies, deleteMovie } from "../services/api";
 import Layout from "../components/layout";
 import { IMovie, IShowError } from "../components/types";
-
 import "@picocss/pico";
 import Modal from "../components/modal";
-
 import LoadingIcon from "../components/Loading/LoadingIcon";
+import Article from "../components/Article";
 
 interface IHome {
   handleEdit: (movie: IMovie) => void;
@@ -36,8 +35,8 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
         const response = await getMovies();
         setMovies(response.data);
       } catch (error) {
-        toggleModal();
         if (error instanceof Error) {
+          toggleModal();
           console.error("Error deleting movie:", error);
           setShowModalMsg({
             action: "Failed",
@@ -56,7 +55,6 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
 
     try {
       await deleteMovie(id);
-      toggleModal();
       setShowModalMsg({
         action: "Succes",
         msg: "deleted",
@@ -65,7 +63,6 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error deleting movie:", error);
-        toggleModal();
         setShowModalMsg({
           action: "Failed",
           msg: error.message,
@@ -79,6 +76,7 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
       }
     } finally {
       setIsLoading(false);
+      toggleModal();
     }
   }
 
@@ -97,24 +95,14 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
           >
             {isLoading ? <LoadingIcon /> : <>refresh</>}
           </button>
-          {/* {isLoading ? (
-            <p>Loading movies!</p>
-          ) : ( */}
           <div className="grid">
             {movies.map((m) => (
-              <article key={m.id}>
-                <h1>{m.title}</h1>
-                <h3>{m.year}</h3>
-
-                <div className="grid">
-                  <Link to={`/edit/${m.id}`}>
-                    <button onClick={() => handleEdit(m)}>Edit</button>
-                  </Link>
-                  <button onClick={() => handleDelete(m.id)}>
-                    {isLoading ? <LoadingIcon /> : <>delete</>}
-                  </button>
-                </div>
-              </article>
+              <Article
+                key={m.id}
+                movie={m}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
             ))}
             {showModal && (
               <Modal
@@ -124,7 +112,6 @@ const Home: React.FC<IHome> = ({ handleEdit }) => {
               />
             )}
           </div>
-          {/* )} */}
         </div>
       </Layout>
     </>
